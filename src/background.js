@@ -14,7 +14,7 @@ protocol.registerSchemesAsPrivileged([
   { scheme: 'app', privileges: { secure: true, standard: true } }
 ])
 
-function createWindow() {
+function createWindow(router = 'editor') {
   // Create the browser window.
   win = new BrowserWindow({
     width: 800,
@@ -22,18 +22,18 @@ function createWindow() {
     webPreferences: {
       // Use pluginOptions.nodeIntegration, leave this alone
       // See nklayman.github.io/vue-cli-plugin-electron-builder/guide/security.html#node-integration for more info
-      nodeIntegration: process.env.ELECTRON_NODE_INTEGRATION
+      nodeIntegration: true // process.env.ELECTRON_NODE_INTEGRATION
     }
   })
 
   if (process.env.WEBPACK_DEV_SERVER_URL) {
     // Load the url of the dev server if in development mode
-    win.loadURL(process.env.WEBPACK_DEV_SERVER_URL)
+    win.loadURL(`${process.env.WEBPACK_DEV_SERVER_URL}#/${router}`)
     if (!process.env.IS_TEST) win.webContents.openDevTools()
   } else {
     createProtocol('app')
     // Load the index.html when not in development
-    win.loadURL('app://./index.html')
+    win.loadURL(`app://./index.html/#/${router}`)
   }
 
   win.on('closed', () => {
@@ -55,6 +55,7 @@ app.on('activate', () => {
   // dock icon is clicked and there are no other windows open.
   if (win === null) {
     createWindow()
+    createWindow('previewer')
   }
 })
 
@@ -71,6 +72,7 @@ app.on('ready', async () => {
     }
   }
   createWindow()
+  createWindow('previewer')
 })
 
 // Exit cleanly on request from parent process in development mode.

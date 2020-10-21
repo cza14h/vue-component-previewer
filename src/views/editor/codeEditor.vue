@@ -1,6 +1,6 @@
 <template>
   <div>
-
+    <textarea style="height:100%" ref="textarea"></textarea>
   </div>
 </template>
 
@@ -20,7 +20,30 @@ import 'codemirror/mode/sql/sql.js'
 import 'codemirror/mode/swift/swift.js'
 import 'codemirror/mode/vue/vue.js'
 export default {
-  name: 'CodeEditor'
+  name: 'CodeEditor',
+  data() {
+    return {
+      editorInstance: null,
+      options: {
+        tabSize: 2,
+        theme: 'cobalt',
+        lineNumbers: true,
+        line: true,
+        mode:'javascript',
+        indentUnit:2,
+        smartIndent:true,
+        indentWithTabs: true,
+      },
+    }
+  },
+  methods: {
+    init() {
+      this.editorInstance = CodeMirror.fromTextArea(this.$refs.textarea, this.options)
+    }
+  },
+  mounted(){
+    this.init()
+  }
 }
 </script>
 
