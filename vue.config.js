@@ -98,7 +98,11 @@ module.exports = {
                     to: require("path").resolve("canvashtml")
                 });
                 return args;
-            });
+            })
         }
+        config.plugin("html").tap(args => {
+            args[0].title = 'Component Live Viewer'
+            return args
+        })
     },
 }

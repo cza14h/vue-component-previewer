@@ -43,6 +43,7 @@ export default {
   },
   mounted(){
     this.init()
+    document.title='Code Editor'
   }
 }
 </script>
