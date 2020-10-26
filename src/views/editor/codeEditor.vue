@@ -1,28 +1,27 @@
-)<template>
+<template>
   <div id="editor">
-    <textarea style="height: 100%" ref="textarea"></textarea>
+    <textarea
+      style="height: 100%"
+      ref="textarea"
+    ></textarea>
   </div>
 </template>
 
 <script>
 import CodeMirror from 'codemirror'
+import emmet from '@emmetio/codemirror-plugin'
 import 'codemirror/lib/codemirror.css'
-import 'codemirror/theme/cobalt.css'
-// import 'codemirror/mode/javascript/javascript.js'
-// import 'codemirror/mode/css/css.js'
-// import 'codemirror/mode/xml/xml.js'
-// import 'codemirror/mode/clike/clike.js'
-// import 'codemirror/mode/markdown/markdown.js'
-// import 'codemirror/mode/python/python.js'
-// import 'codemirror/mode/r/r.js'
-// import 'codemirror/mode/shell/shell.js'
-// import 'codemirror/mode/sql/sql.js'
-// import 'codemirror/mode/swift/swift.js'
+ import 'codemirror/theme/cobalt.css'
+import 'codemirror/addon/selection/active-line'
+import 'codemirror/addon/edit/matchbrackets'
+import debounce from 'lodash/debounce'
 import 'codemirror/mode/vue/vue.js'
-// import editorMenu from '../../menus/editorMenu'
-let editorInstance = null
+emmet(CodeMirror)
 
-window.ipcRenderer.on('file-opened', function (e, arg) {
+let editorInstance = null
+const { ipcRenderer } = window.require('electron')
+
+ipcRenderer.on('file-opened', function (e, arg) {
   editorInstance.setValue('')
   editorInstance.setValue(arg)
 })
@@ -30,6 +29,7 @@ export default {
   name: 'CodeEditor',
   data() {
     return {
+      editor: null,
       options: {
         tabSize: 2,
         theme: 'cobalt',
@@ -45,6 +45,10 @@ export default {
   methods: {
     init(value = '') {
       editorInstance = CodeMirror.fromTextArea(this.$refs.textarea, { ...this.options, value })
+      this.editor = editorInstance
+      this.editor.on('change', debounce(() => {
+        this.$emit('change', this.editor.getValue())
+      }, 400))
     },
   },
   mounted() {
@@ -58,5 +62,6 @@ export default {
 .CodeMirror {
   height: 100%;
   min-height: 100vh;
+  font-family:  Monaco, "Andale Mono", "Ubuntu Mono", monospace;
 }
 </style>
