@@ -47,7 +47,7 @@ export default {
       editorInstance = CodeMirror.fromTextArea(this.$refs.textarea, { ...this.options, value })
       this.editor = editorInstance
       this.editor.on('change', debounce(() => {
-        this.$emit('change', this.editor.getValue())
+        ipcRenderer.send('code-updated',{type:'component',code:this.editor.getValue()})
       }, 400))
     },
   },

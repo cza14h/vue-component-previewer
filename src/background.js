@@ -1,6 +1,6 @@
 'use strict'
 
-import { app, protocol, BrowserWindow } from 'electron'
+import { app, protocol, BrowserWindow, ipcMain } from 'electron'
 import { createProtocol } from 'vue-cli-plugin-electron-builder/lib'
 import installExtension, { VUEJS_DEVTOOLS } from 'electron-devtools-installer'
 import './menus/mainMenu'
@@ -96,4 +96,8 @@ if (isDevelopment) {
     })
   }
 }
+
+ipcMain.on('code-updated', (event, arg) => {
+  win['previewer'].webContents.send('code-updated', arg)
+})
 

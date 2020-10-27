@@ -13,6 +13,7 @@
   },
   "main": "background.js",
   "dependencies": {
+    "@emmetio/codemirror-plugin": "^1.2.1",
     "codemirror": "^5.58.1",
     "core-js": "^3.6.5",
     "vue": "^2.6.11",

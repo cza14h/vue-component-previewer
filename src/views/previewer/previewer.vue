@@ -9,6 +9,7 @@
 </template>
 
 <script>
+const { ipcRenderer } = window.require('electron')
 import { parseComponent, compile } from 'vue-template-compiler/browser'
 
 export default {
@@ -16,10 +17,6 @@ export default {
     this.handleError(err)
   },
   props: {
-    code: {
-      type: String,
-      required: true
-    },
     components: {
       type: Object,
       default: () => ({})
@@ -27,6 +24,7 @@ export default {
   },
   data() {
     return {
+      code: '',
       scope: this.generateScope(),
       previewedComponent: undefined,
       iteration: 0,
@@ -40,6 +38,12 @@ export default {
   },
   created() {
     this.renderComponent(this.code.trim())
+  },
+  mounted() {
+    ipcRenderer.on('code-updated', (event, arg) => {
+      console.log(arg)
+      this.code = arg.code
+    })
   },
   methods: {
     generateScope() {
