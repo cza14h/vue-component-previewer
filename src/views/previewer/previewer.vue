@@ -31,11 +31,6 @@ export default {
       error: false
     }
   },
-  watch: {
-    code(value) {
-      this.renderComponent(value.trim())
-    }
-  },
   created() {
     this.renderComponent(this.code.trim())
   },
@@ -43,6 +38,7 @@ export default {
     ipcRenderer.on('code-updated', (event, arg) => {
       console.log(arg)
       this.code = arg.code
+      this.renderComponent(this.code.trim())
     })
   },
   methods: {
@@ -62,6 +58,7 @@ export default {
 
       try {
         const parsed = parseComponent(code)
+        console.log(parsed)
 
         appComponent = {
           template: parsed.template ? parsed.template.content : code

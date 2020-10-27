@@ -64,4 +64,7 @@ export default {
   min-height: 100vh;
   font-family:  Monaco, "Andale Mono", "Ubuntu Mono", monospace;
 }
+.CodeMirror-scroll{
+  height: 100vh!important;
+}
 </style>
